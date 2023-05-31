@@ -124,3 +124,11 @@ res.status(500).send(
 )
     }
 } ;
+
+
+
+// test controller 
+
+export const testController =(req,res)=>{
+    res.send('Protect')
+}
