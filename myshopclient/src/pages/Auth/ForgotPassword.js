@@ -2,32 +2,36 @@ import React, { useState } from "react";
 import Layout from "../../components/Layout/Layout";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./AuthStyle.css";
 import logo from "../../Images/mainmyshop.png";
+import { useAuth } from "../../Context/AuthContext";
 
-const Register = () => {
-  const [name, setName] = useState("");
+const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
+  const [NewPassword, setNewPassword] = useState("");
   const [answer, setAnswer] = useState("");
+  const [auth, setAuth] = useAuth();
   const navigate = useNavigate();
-
+  const location = useLocation();
   // handleSubmit
   const handleSubmit = async (e) => {
     e.preventDefault();
     // toast.success("Tost");
-    const data = { name, email, password, phone, address, answer };
-    console.log(axios.isCancel("something"));
+    const data = { email, password };
 
     try {
-      const res = await axios.post("/api/v1/auth/register", data);
+      const res = await axios.post("/api/v1/auth/login", data);
 
       if (res.data && res.data.success) {
         toast.success(res.data && res.data.message);
-        navigate("/login");
+        setAuth({
+          ...auth,
+          user: res.data.user,
+          token: res.data.jwtToken,
+        });
+        localStorage.setItem("auth", JSON.stringify(res.data));
+        navigate(location.state || "/");
       } else {
         toast.error(res.data.message);
       }
@@ -37,7 +41,7 @@ const Register = () => {
     }
   };
   return (
-    <Layout title={"Register - "}>
+    <Layout title={"Forgot Password - "}>
       <div className="form_container">
         <form onSubmit={handleSubmit}>
           <img
@@ -52,18 +56,8 @@ const Register = () => {
             }}
             src={logo}
           />
-          <h1 className="title">Register Now</h1>
-          <div className="mb-3">
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="form-control"
-              id="exampleInputname"
-              placeholder="Enter Your Name"
-              required
-            />
-          </div>
+
+          <h1 className="title">Reset Your Password</h1>
           <div className="mb-3">
             <input
               type="email"
@@ -87,41 +81,20 @@ const Register = () => {
               required
             />
           </div>
+
           <div className="mb-3">
-            <input
-              type="mobile"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="form-control"
-              id="exampleInputphone"
-              placeholder="Enter Your Phone"
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <input
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className="form-control"
-              id="exampleInputaddress"
-              placeholder="Enter Your Address"
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <input
-              type="text"
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              className="form-control"
-              id="exampleInputaddress"
-              placeholder="What Is Your Father Name"
-              required
-            />
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => {
+                navigate("/forgot-password");
+              }}
+            >
+              Forgot Password
+            </button>
           </div>
           <button type="submit" className="btn btn-primary">
-            Register
+            Login
           </button>
         </form>
       </div>
@@ -129,4 +102,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default ForgotPassword;

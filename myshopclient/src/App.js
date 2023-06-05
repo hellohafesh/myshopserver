@@ -9,6 +9,7 @@ import LogIn from "./pages/Auth/LogIn";
 import Dashboard from "./pages/userPage/Dashboard";
 import { Toaster } from "react-hot-toast";
 import PrivateRoute from "./Route/PrivateRoute";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/contact" element={<Concact />} />
         <Route path="/policy" element={<Policy />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/login" element={<LogIn />} />
 
         <Route path="/dashboard" element={<PrivateRoute />}>
