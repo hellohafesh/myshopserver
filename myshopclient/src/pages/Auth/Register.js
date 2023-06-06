@@ -23,7 +23,14 @@ const Register = () => {
     console.log(axios.isCancel("something"));
 
     try {
-      const res = await axios.post("/api/v1/auth/register", data);
+      const res = await axios.post("/api/v1/auth/register", {
+        name,
+        email,
+        password,
+        phone,
+        address,
+        answer,
+      });
 
       if (res.data && res.data.success) {
         toast.success(res.data && res.data.message);

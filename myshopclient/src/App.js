@@ -9,7 +9,12 @@ import LogIn from "./pages/Auth/LogIn";
 import Dashboard from "./pages/userPage/Dashboard";
 import { Toaster } from "react-hot-toast";
 import PrivateRoute from "./Route/PrivateRoute";
+import AdminRoute from "./Route/AdminRoute";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import CreateCategory from "./pages/Admin/CreateCategory";
+import CreateProduct from "./pages/Admin/CreateProduct";
+import Users from "./pages/Admin/Users";
 
 function App() {
   return (
@@ -24,8 +29,16 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/login" element={<LogIn />} />
 
+        {/* user dashboard  */}
         <Route path="/dashboard" element={<PrivateRoute />}>
-          <Route path="" element={<Dashboard />} />
+          <Route path="user" element={<Dashboard />} />
+        </Route>
+        {/* admin dashboard  */}
+        <Route path="/dashboard" element={<AdminRoute />}>
+          <Route path="admin" element={<AdminDashboard />} />
+          <Route path="admin/cerate-category" element={<CreateCategory />} />
+          <Route path="admin/cerate-product" element={<CreateProduct />} />
+          <Route path="admin/users" element={<Users />} />
         </Route>
 
         <Route path="*" element={<PageNotFound />} />

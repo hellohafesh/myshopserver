@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const Spiner = () => {
-  const [count, setCount] = useState(10);
+const Spiner = ({ path = "login" }) => {
+  const [count, setCount] = useState(5);
   const navigate = useNavigate();
   const location = useLocation();
   useEffect(() => {
@@ -10,11 +10,11 @@ const Spiner = () => {
       setCount((pv) => --pv);
     }, 1000);
     count === 0 &&
-      navigate("/login", {
+      navigate(`/${path}`, {
         state: location.pathname,
       });
     return () => clearInterval(interval);
-  }, [count, navigate, location]);
+  }, [count, navigate, location, path]);
 
   return (
     <>
@@ -26,26 +26,28 @@ const Spiner = () => {
           Redirecting to you to {count} seconds
         </h1>
         <div>
-          <div class="spinner-grow text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <div class="spinner-grow text-secondary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <div class="spinner-grow text-success" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <div class="spinner-grow text-danger" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <div class="spinner-grow text-warning" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <div class="spinner-grow text-info" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <div class="spinner-grow text-dark" role="status">
-            <span class="visually-hidden">Loading...</span>
+          <div>
+            <div className="spinner-grow text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <div className="spinner-grow text-secondary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <div className="spinner-grow text-success" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <div className="spinner-grow text-danger" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <div className="spinner-grow text-warning" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <div className="spinner-grow text-info" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <div className="spinner-grow text-dark" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
           </div>
         </div>
       </div>
