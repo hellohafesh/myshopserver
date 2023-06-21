@@ -48,9 +48,11 @@ export const updateCategoryController = async (req, res) => {
       { new: true }
     );
 
-    res
-      .status(201)
-      .send({ success: true, message: "Category Is Added", category });
+    res.status(201).send({
+      success: true,
+      message: "Category Is Added and update",
+      category,
+    });
   } catch (e) {
     console.log(e);
     res.status(500).send({

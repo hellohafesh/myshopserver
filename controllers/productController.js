@@ -49,90 +49,93 @@ export const createProductController = async (req, res) => {
     });
   }
 };
+export const getProductController = async (req, res) => {
+  try {
+    const products = await productModels
+      .find({})
+      .populate("category")
+      .select("-photo")
+      .limit(12)
+      .sort({ createdAt: -1 });
+    res.status(200).send({
+      success: true,
+      message: "All Product",
+      totalCount: products.length,
+      products,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).send({
+      success: false,
+      e,
+      message: "Error In get Product",
+    });
+  }
+};
 
-//  Update category
+//  get single product
 
-// export const updateCategoryController = async (req, res) => {
-//   try {
-//     const { name } = req.body;
-//     const { id } = req.params;
-//     // if (!name) {
-//     //   return res.status(401).send({ message: "Name is Require" });
-//     // }
-//     const category = await productModels.findByIdAndUpdate(
-//       id,
-//       {
-//         name,
-//         slug: slugify(name),
-//       },
-//       { new: true }
-//     );
+export const getSingleProductController = async (req, res) => {
+  try {
+    const product = await productModels
+      .findOne({ slug: req.params.slug })
+      .select("-photo")
+      .populate("category");
+    res.status(200).send({
+      success: true,
+      message: "Single Product",
+      product,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).send({
+      success: false,
+      e,
+      message: "Error In get Single Product",
+    });
+  }
+};
 
-//     res
-//       .status(201)
-//       .send({ success: true, message: "Category Is Added", category });
-//   } catch (e) {
-//     console.log(e);
-//     res.status(500).send({
-//       success: false,
-//       e,
-//       message: "Error In Update Category",
-//     });
-//   }
-// };
+// get photo
+export const getProductPhotoController = async (req, res) => {
+  try {
+    const product = await productModels
+      .findById(req.params.pid)
+      .select("photo");
 
-// get all category
+    if (product.photo.data) {
+      res.set("Content-type", product.photo.contentType);
+      return res.status(200).send(product.photo.data);
+    }
+    res.status(200).send({
+      success: true,
+      message: "Single Product",
+      product,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).send({
+      success: false,
+      e,
+      message: "Error In get photo of Product",
+    });
+  }
+};
 
-// export const categoryController = async (req, res) => {
-//   try {
-//     const category = await productModels.find({});
-
-//     res.status(201).send({ success: true, message: "Category List", category });
-//   } catch (e) {
-//     console.log(e);
-//     res.status(500).send({
-//       success: false,
-//       e,
-//       message: "Error In get all Category",
-//     });
-//   }
-// };
-// single  category
-
-// export const singleCategoryController = async (req, res) => {
-//   try {
-//     const { slug } = req.params;
-//     const category = await productModels.find({ slug });
-
-//     res
-//       .status(201)
-//       .send({ success: true, message: "Single Category Success", category });
-//   } catch (e) {
-//     console.log(e);
-//     res.status(500).send({
-//       success: false,
-//       e,
-//       message: "Error In get single Category",
-//     });
-//   }
-// };
-
-// delete  category
-
-// export const deleteCategoryController = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const category = await productModels.findByIdAndDelete(id);
-
-//     res
-//       .status(201)
-//       .send({ success: true, message: "Single Category Delete Success" });
-//   } catch (e) {
-//     console.log(e);
-//     res.status(500).send({
-//       success: false,
-//       e,
-//       message: "Error In delete Category",
-//     });
-//   }
-// };
+// delete product
+export const deleteProductController = async (req, res) => {
+  try {
+    await productModels.findByIdAndDelete(req.params.pid).select("-photo");
+    res.status(200).send({
+      success: true,
+      message: " Product Deleted Success",
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).send({
+      success: false,
+      e,
+      message: "Error In delete of Product",
+    });
+  }
+};
