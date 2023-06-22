@@ -39,9 +39,27 @@ const HomePage = () => {
       toast.error("Error In get all product");
     }
   };
+
+  // get all filter Products
+  const filterProducts = async () => {
+    try {
+      const { data } = await axios.post(`/api/v1/products/product-filters`, {
+        checked,
+        radio,
+      });
+
+      setProducts(data?.products);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   useEffect(() => {
-    getAllProducts();
-  }, []);
+    if (!checked.length || !radio.length) getAllProducts();
+  }, [checked.length, radio.length]);
+  useEffect(() => {
+    if (checked.length || radio.length) filterProducts();
+  }, [checked, radio]);
 
   // filter by category
   const handleFilter = (value, id) => {
@@ -53,7 +71,7 @@ const HomePage = () => {
     }
     setChecked(all);
   };
-  // filter by category
+  // filter by price
   const handleRadio = (value, id) => {
     let all = [...checked];
     if (value) {
@@ -83,7 +101,7 @@ const HomePage = () => {
           <div className="d-flex flex-wrap">
             <Radio.Group onChange={(e) => setRadio(e.target.value)}>
               {prices?.map((p) => (
-                <div key={p.id}>
+                <div key={p._id}>
                   <Radio value={p.array}>{p.name}</Radio>
                 </div>
               ))}
@@ -91,8 +109,6 @@ const HomePage = () => {
           </div>
         </div>
         <div className="col-md-9">
-          {JSON.stringify(checked, null, 4)}
-          {JSON.stringify(radio, null, 4)}
           <h1 className="text-center">All Products </h1>
           <div className="d-flex flex-wrap">
             {products?.map((p) => (
@@ -113,6 +129,9 @@ const HomePage = () => {
                   </h6>
                   <p className="card-text" style={{ fontSize: "0.7rem" }}>
                     {`${p.description.substring(0, 140)}.....`}
+                  </p>
+                  <p className="card-text" style={{ fontSize: "0.7rem" }}>
+                    {`$ ${p.price}`}
                   </p>
                   <Link
                     to={"/"}
