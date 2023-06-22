@@ -51,6 +51,6 @@ router.post("/product-filters", getFilterProductController);
 router.get("/product-count", getProductCountController);
 
 // product per page
-router.get("/product-list/:page", getProductListController);
+router.get("/product-list/:page/:perPage", getProductListController);
 
 export default router;

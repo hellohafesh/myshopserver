@@ -13,8 +13,10 @@ const HomePage = () => {
   const [radio, setRadio] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(8);
   const [loading, setLoading] = useState(false);
 
+  console.log(perPage);
   // get all category
   const getAllCategory = async () => {
     try {
@@ -56,7 +58,9 @@ const HomePage = () => {
   const getAllProducts = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`/api/v1/products/product-list/${page}`);
+      const { data } = await axios.get(
+        `/api/v1/products/product-list/${page}/${perPage}`
+      );
       setLoading(false);
       setProducts(data?.products);
     } catch (e) {
@@ -68,7 +72,7 @@ const HomePage = () => {
 
   useEffect(() => {
     if (!checked?.length || !radio?.length) getAllProducts();
-  }, [checked?.length, radio?.length]);
+  }, [checked?.length, radio?.length, perPage]);
   useEffect(() => {
     if (checked?.length || radio?.length) filterProducts();
   }, [checked, radio]);
@@ -152,6 +156,22 @@ const HomePage = () => {
         </div>
         <div className="col-md-9">
           <h1 className="text-center">All Products </h1>
+          <div className="d-flex justify-content-between">
+            <p>Change Here As You Want </p>
+            <select
+              className="form-select"
+              style={{ width: "20%" }}
+              aria-label="Default select example"
+              onChange={(e) => setPerPage(e.target.value)}
+            >
+              <option selected>Product Per Page</option>
+              <option value={8}>8</option>
+              <option value={12}>12</option>
+              <option value={16}>16</option>
+              <option value={24}>24</option>
+              <option value={32}>32</option>
+            </select>
+          </div>
           <div className="d-flex flex-wrap">
             {products?.map((p) => (
               <div
