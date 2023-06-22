@@ -11,13 +11,16 @@ const HomePage = () => {
   const [categories, setCategories] = useState([]);
   const [checked, setChecked] = useState([]);
   const [radio, setRadio] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   // get all category
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get("/api/v1/category/get-category");
       if (data?.success) {
-        setCategories(data.category);
+        setCategories(data?.category);
       }
     } catch (e) {
       console.log(e);
@@ -25,41 +28,8 @@ const HomePage = () => {
   };
   useEffect(() => {
     getAllCategory();
+    getTotal();
   }, []);
-
-  //   Get All Products
-  const getAllProducts = async () => {
-    try {
-      const { data } = await axios.get("/api/v1/products/get-product");
-      if (data?.success) {
-        setProducts(data.products);
-      }
-    } catch (e) {
-      console.log(e);
-      toast.error("Error In get all product");
-    }
-  };
-
-  // get all filter Products
-  const filterProducts = async () => {
-    try {
-      const { data } = await axios.post(`/api/v1/products/product-filters`, {
-        checked,
-        radio,
-      });
-
-      setProducts(data?.products);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  useEffect(() => {
-    if (!checked.length || !radio.length) getAllProducts();
-  }, [checked.length, radio.length]);
-  useEffect(() => {
-    if (checked.length || radio.length) filterProducts();
-  }, [checked, radio]);
 
   // filter by category
   const handleFilter = (value, id) => {
@@ -81,6 +51,70 @@ const HomePage = () => {
     }
     setChecked(all);
   };
+
+  //   Get All Products
+  const getAllProducts = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(`/api/v1/products/product-list/${page}`);
+      setLoading(false);
+      setProducts(data?.products);
+    } catch (e) {
+      setLoading(false);
+      console.log(e);
+      toast.error("Error In get all product");
+    }
+  };
+
+  useEffect(() => {
+    if (!checked?.length || !radio?.length) getAllProducts();
+  }, [checked?.length, radio?.length]);
+  useEffect(() => {
+    if (checked?.length || radio?.length) filterProducts();
+  }, [checked, radio]);
+
+  // get total count
+  const getTotal = async () => {
+    try {
+      const { data } = await axios.get("/api/v1/products/product-count");
+
+      setTotal(data?.total);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    if (page === 1) return;
+    loadMore();
+  }, [page]);
+  // get load more
+  const loadMore = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(`/api/v1/products/product-list/${page}`);
+      setLoading(false);
+      setProducts([...products, ...data?.products]);
+      // setTotal(data?.total);
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+    }
+  };
+
+  // get all filter Products
+  const filterProducts = async () => {
+    try {
+      const { data } = await axios.post(`/api/v1/products/product-filters`, {
+        checked,
+        radio,
+      });
+
+      setProducts(data?.products);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <Layout title={"Home - "}>
       <div className="row mt-3">
@@ -106,6 +140,14 @@ const HomePage = () => {
                 </div>
               ))}
             </Radio.Group>
+          </div>
+          <div className="d-flex flex-wrap">
+            <button
+              className="btn btn-xs btn-warning mt-4 "
+              onClick={() => window.location.reload()}
+            >
+              Reset Filters
+            </button>
           </div>
         </div>
         <div className="col-md-9">
@@ -150,6 +192,19 @@ const HomePage = () => {
                 </div>
               </div>
             ))}
+          </div>
+          <div className="m-2 p-3 ">
+            {products && products.length < total && (
+              <button
+                className="btn btn-xs btn-info"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setPage(page + 1);
+                }}
+              >
+                {loading ? "Loading.." : "Load more"}
+              </button>
+            )}
           </div>
         </div>
       </div>
