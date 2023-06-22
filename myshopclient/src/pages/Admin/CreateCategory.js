@@ -4,12 +4,14 @@ import AdminMenu from "../../components/Layout/AdminMenu";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import CategoryForm from "../../components/Form/CategoryForm/CategoryForm";
-
+import { Modal } from "antd";
 const CreateCategory = () => {
   const [categories, setCategories] = useState([]);
   const [name, setName] = useState("");
   const [visible, setVisible] = useState(false);
-  // handle foem
+  const [selected, setSelected] = useState(null);
+  const [updatedName, setUpdatedName] = useState("");
+  // handle form
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -27,11 +29,12 @@ const CreateCategory = () => {
       toast.error("Something Went Wrong Create Category");
     }
   };
+
   // get all category
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get("/api/v1/category/get-category");
-      if (data.success) {
+      if (data?.success) {
         setCategories(data.category);
       }
     } catch (e) {
@@ -42,6 +45,49 @@ const CreateCategory = () => {
   useEffect(() => {
     getAllCategory();
   }, []);
+
+  // handle update form
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      console.log(e);
+      const { data } = await axios.put(
+        `/api/v1/category/update-category/${selected._id}`,
+        {
+          name: updatedName,
+        }
+      );
+      if (data?.success) {
+        toast.success(`${name} as ${updatedName} is Update for a category`);
+        setSelected(null);
+        setUpdatedName("");
+        setVisible(false);
+        getAllCategory();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+      toast.error("Something Went Wrong Update Category");
+    }
+  };
+  // handle delete category
+  const handledelete = async (pid) => {
+    try {
+      const { data } = await axios.delete(
+        `/api/v1/category/delete-category/${pid}`
+      );
+      if (data?.success) {
+        toast.success(`A category  is deleted .`);
+        getAllCategory();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (e) {
+      console.log(e);
+      toast.error("Something Went Wrong delete a Category");
+    }
+  };
   return (
     <Layout title={"Add Category -"}>
       <div className="container-fluid m-3 p-3">
@@ -74,14 +120,42 @@ const CreateCategory = () => {
                       <tr key={category._id}>
                         <td>{category.name}</td>
                         <td>
-                          <button className="btn btn-primary m-2">Edit</button>
-                          <button className="btn btn-danger">Delete</button>
+                          <button
+                            className="btn btn-primary m-2"
+                            onClick={() => {
+                              setVisible(true);
+                              setUpdatedName(category.name);
+                              setSelected(category);
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => {
+                              handledelete(category._id);
+                            }}
+                          >
+                            Delete
+                          </button>
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
+              <Modal
+                onCancel={() => setVisible(false)}
+                footer={null}
+                visible={visible}
+              >
+                <h1>Modal</h1>
+                <CategoryForm
+                  value={updatedName}
+                  setValue={setUpdatedName}
+                  handleSubmit={handleUpdate}
+                />
+              </Modal>
             </div>
           </div>
         </div>

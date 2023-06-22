@@ -7,7 +7,7 @@ import { Select } from "antd";
 import { useNavigate } from "react-router-dom";
 
 const { Option } = Select;
-const CreateProduct = () => {
+const UpdateProduct = () => {
   const [categories, setCategories] = useState([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -70,7 +70,7 @@ const CreateProduct = () => {
           </div>
           <div className="col-md-9">
             <div className="card p-3 w-75">
-              <h1>Create Product </h1>
+              <h1>Update Product </h1>
               <div className="m-1">
                 <Select
                   bordered={false}
@@ -179,4 +179,4 @@ const CreateProduct = () => {
   );
 };
 
-export default CreateProduct;
+export default UpdateProduct;
