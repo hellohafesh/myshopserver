@@ -34,7 +34,7 @@ const Products = () => {
           <div className="col-md-9">
             <div className="card p-3 ">
               <h1 className="text-center">All Products </h1>
-              <div className="d-flex">
+              <div className="d-flex flex-wrap">
                 {products.map((p) => (
                   <Link
                     to={`/dashboard/admin/products/${p.slug}`}
