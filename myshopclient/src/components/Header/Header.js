@@ -3,6 +3,7 @@ import { NavLink, Link } from "react-router-dom";
 import logo from "../../Images/myshop.png";
 import { useAuth } from "../../Context/AuthContext";
 import toast from "react-hot-toast";
+import SearchInput from "../Form/CategoryForm/SearchInput";
 
 const Header = () => {
   const [auth, setAuth] = useAuth();
@@ -39,6 +40,7 @@ const Header = () => {
               My Shop
             </Link>
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+              <SearchInput />
               <li className="nav-item">
                 <NavLink to="/" className="nav-link " aria-current="page">
                   Home

@@ -90,12 +90,14 @@ const HomePage = () => {
   useEffect(() => {
     if (page === 1) return;
     loadMore();
-  }, [page]);
+  }, [page, perPage]);
   // get load more
   const loadMore = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`/api/v1/products/product-list/${page}`);
+      const { data } = await axios.get(
+        `/api/v1/products/product-list/${page}/${perPage}`
+      );
       setLoading(false);
       setProducts([...products, ...data?.products]);
       // setTotal(data?.total);
@@ -156,7 +158,7 @@ const HomePage = () => {
         </div>
         <div className="col-md-9">
           <h1 className="text-center">All Products </h1>
-          <div className="d-flex justify-content-between">
+          <div className="d-flex justify-content-between p-3">
             <p>Change Here As You Want </p>
             <select
               className="form-select"

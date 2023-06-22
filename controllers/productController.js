@@ -261,3 +261,26 @@ export const getProductListController = async (req, res) => {
     });
   }
 };
+
+// search product
+export const searchProductController = async (req, res) => {
+  try {
+    const { keyword } = req.params;
+    const results = await productModels
+      .find({
+        $or: [
+          { name: { $regex: keyword, $options: "i" } },
+          { description: { $regex: keyword, $options: "i" } },
+        ],
+      })
+      .select("-photo");
+    res.send(results);
+  } catch (e) {
+    console.log(e);
+    res.status(400).send({
+      success: false,
+      e,
+      message: "Error In  Product Searching ",
+    });
+  }
+};
