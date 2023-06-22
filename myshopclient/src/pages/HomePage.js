@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout/Layout";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Checkbox, Radio } from "antd";
 import { prices } from "../components/Prices/Prices";
 
@@ -15,6 +15,7 @@ const HomePage = () => {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(8);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   console.log(perPage);
   // get all category
@@ -197,13 +198,14 @@ const HomePage = () => {
                   <p className="card-text" style={{ fontSize: "0.7rem" }}>
                     {`$ ${p.price}`}
                   </p>
-                  <Link
+                  <button
+                    onClick={() => navigate(`/product/${p.slug}`)}
                     to={"/"}
                     className="btn btn-xs btn-primary ms-1"
                     style={{ fontSize: "0.7rem" }}
                   >
                     See Details
-                  </Link>
+                  </button>
                   <Link
                     to={"/"}
                     className="btn btn-xs btn-info ms-1"
