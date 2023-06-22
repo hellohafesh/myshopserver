@@ -74,6 +74,8 @@ const CreateCategory = () => {
   // handle delete category
   const handledelete = async (pid) => {
     try {
+      let answer = window.prompt("Are You Want To Delete This Category ?");
+      if (!answer) return;
       const { data } = await axios.delete(
         `/api/v1/category/delete-category/${pid}`
       );
