@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { Checkbox, Radio } from "antd";
 import { prices } from "../components/Prices/Prices";
+import { useCart } from "../Context/CartContext";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -13,6 +14,7 @@ const HomePage = () => {
   const [radio, setRadio] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+  const [cart, setCart] = useCart();
   const [perPage, setPerPage] = useState(8);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -200,19 +202,25 @@ const HomePage = () => {
                   </p>
                   <button
                     onClick={() => navigate(`/product/${p.slug}`)}
-                    to={"/"}
                     className="btn btn-xs btn-primary ms-1"
                     style={{ fontSize: "0.7rem" }}
                   >
                     See Details
                   </button>
-                  <Link
-                    to={"/"}
+                  <button
+                    onClick={() => {
+                      setCart([...cart, p]);
+                      localStorage.setItem(
+                        "cart",
+                        JSON.stringify([...cart, p])
+                      );
+                      toast.success(`Item - ${p.name} add to Cart`);
+                    }}
                     className="btn btn-xs btn-info ms-1"
                     style={{ fontSize: "0.7rem" }}
                   >
                     add Card
-                  </Link>
+                  </button>
                 </div>
               </div>
             ))}
