@@ -9,6 +9,7 @@ import {
   getProductListController,
   getProductPhotoController,
   getSingleProductController,
+  productCategoryController,
   reletedProductController,
   searchProductController,
   updateProductController,
@@ -60,5 +61,8 @@ router.get("/search/:keyword", searchProductController);
 
 // product similar
 router.get("/releted-product/:pid/:cid", reletedProductController);
+
+// category product
+router.get("/product-category/:slug", productCategoryController);
 
 export default router;
