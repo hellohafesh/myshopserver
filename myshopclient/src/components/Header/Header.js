@@ -4,9 +4,11 @@ import logo from "../../Images/myshop.png";
 import { useAuth } from "../../Context/AuthContext";
 import toast from "react-hot-toast";
 import SearchInput from "../Form/CategoryForm/SearchInput";
+import useCategory from "../../Hooks/useCategory";
 
 const Header = () => {
   const [auth, setAuth] = useAuth();
+  const categories = useCategory();
   const handleLogOut = () => {
     setAuth({
       ...auth,
@@ -46,15 +48,42 @@ const Header = () => {
                   Home
                 </NavLink>
               </li>
-              <li className="nav-item">
+              <li className="nav-item dropdown">
+                <Link
+                  to="/categories"
+                  className="nav-link dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                >
+                  Categories
+                </Link>
+                <ul className="dropdown-menu">
+                  <li>
+                    <Link to={`/categories`} className="dropdown-item">
+                      All Categories
+                    </Link>
+                  </li>
+                  {categories?.map((c) => (
+                    <li>
+                      <Link
+                        to={`/category/${c.slug}`}
+                        className="dropdown-item"
+                      >
+                        {c.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+
+              {/* <li className="nav-item">
                 <NavLink
-                  to="/category"
+                  
                   className="nav-link"
                   aria-current="page"
                 >
-                  Category
+                  
                 </NavLink>
-              </li>
+              </li> */}
               {!auth.user ? (
                 <>
                   <li className="nav-item">

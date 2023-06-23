@@ -86,7 +86,7 @@ const ProductDetails = () => {
         ) : (
           <></>
         )}
-
+        <hr />
         <div className="d-flex flex-wrap">
           {reletedProduct?.map((p) => (
             <div
