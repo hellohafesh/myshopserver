@@ -165,3 +165,34 @@ export const forgotPasswordController = async (req, res) => {
 export const testController = (req, res) => {
   res.send("Protect");
 };
+
+// update profile
+export const updateProfileController = async (req, res) => {
+  try {
+    const { name, email, phone, address } = req.body;
+
+    const user = await userModel.findById(req.user._id);
+    const updatedUser = await userModel.findByIdAndUpdate(
+      req.user._id,
+      {
+        name: name || user.name,
+        email: email || user.email,
+        phone: phone || phone.phone,
+        address: address || user.address,
+      },
+      { new: true }
+    );
+    res.status(200).send({
+      success: true,
+      message: "User Is update",
+      updatedUser,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).send({
+      success: false,
+      e,
+      message: "Error In Update Profile",
+    });
+  }
+};
