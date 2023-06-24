@@ -15,6 +15,12 @@ const AdminMenu = () => {
           </NavLink>
 
           <NavLink
+            to="/dashboard/admin/profile"
+            className="list-group-item list-group-item-action"
+          >
+            Admin Profile
+          </NavLink>
+          <NavLink
             to="/dashboard/admin/cerate-category"
             className="list-group-item list-group-item-action"
           >

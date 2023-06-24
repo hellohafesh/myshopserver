@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Layout from "../../components/Layout/Layout";
-import UserMenu from "../../components/Layout/UserMenu";
 import { useAuth } from "../../Context/AuthContext";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import Layout from "../../components/Layout/Layout";
+import AdminMenu from "../../components/Layout/AdminMenu";
 
-const Profile = () => {
+const AdminProfile = () => {
   const [auth, setAuth] = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -23,6 +23,7 @@ const Profile = () => {
   // handleSubmit
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const { data } = await axios.put("/api/v1/auth/profile", {
         name,
@@ -48,17 +49,17 @@ const Profile = () => {
     }
   };
   return (
-    <Layout title={"My Profile -"}>
+    <Layout title={"Admin Profile -"}>
       <div className="container-fluid m-3 p-3">
         <div className="row">
           <div className="col-md-3">
-            <UserMenu />
+            <AdminMenu />
           </div>
           <div className="col-md-9">
             <div className="card p-0 w-75">
               <div className="form_container">
                 <form onSubmit={handleSubmit}>
-                  <h1 className="title">User Profile</h1>
+                  <h1 className="title">Admin Profile</h1>
                   <div className="mb-3">
                     <input
                       type="text"
@@ -115,4 +116,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default AdminProfile;

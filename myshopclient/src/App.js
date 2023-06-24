@@ -24,6 +24,7 @@ import ProductDetails from "./pages/ProductDetails";
 import Categories from "./pages/Categories";
 import CategoryProducts from "./pages/CategoryProducts";
 import Cart from "./pages/Cart";
+import AdminProfile from "./pages/Admin/AdminProfile";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
         {/* admin dashboard  */}
         <Route path="/dashboard" element={<AdminRoute />}>
           <Route path="admin" element={<AdminDashboard />} />
+          <Route path="admin/profile" element={<AdminProfile />} />
           <Route path="admin/cerate-category" element={<CreateCategory />} />
           <Route path="admin/cerate-product" element={<CreateProduct />} />
           <Route path="admin/products/:slug" element={<UpdateProduct />} />
