@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout/Layout";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { useCart } from "../Context/CartContext";
+import { toast } from "react-hot-toast";
 
 const ProductDetails = () => {
+  const [cart, setCart] = useCart();
   const [product, setProduct] = useState({});
   const [reletedProduct, setReletedProduct] = useState([]);
   const params = useParams();
@@ -72,11 +75,15 @@ const ProductDetails = () => {
           </h4>
 
           <button
-            to={"/"}
+            onClick={() => {
+              setCart([...cart, product]);
+              localStorage.setItem("cart", JSON.stringify([...cart, product]));
+              toast.success(`Item - ${product.name} add to Cart`);
+            }}
             className="btn btn-xs btn-info ms-1"
             style={{ fontSize: "0.7rem" }}
           >
-            Add to Card
+            Add Card
           </button>
         </div>
       </div>
@@ -119,11 +126,15 @@ const ProductDetails = () => {
                   See Details
                 </button>
                 <button
-                  to={"/"}
+                  onClick={() => {
+                    setCart([...cart, p]);
+                    localStorage.setItem("cart", JSON.stringify([...cart, p]));
+                    toast.success(`Item - ${p.name} add to Cart`);
+                  }}
                   className="btn btn-xs btn-info ms-1"
                   style={{ fontSize: "0.7rem" }}
                 >
-                  add Card
+                  Add Card
                 </button>
               </div>
             </div>

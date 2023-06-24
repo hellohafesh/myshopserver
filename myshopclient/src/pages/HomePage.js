@@ -219,7 +219,7 @@ const HomePage = () => {
                     className="btn btn-xs btn-info ms-1"
                     style={{ fontSize: "0.7rem" }}
                   >
-                    add Card
+                    Add Card
                   </button>
                 </div>
               </div>
