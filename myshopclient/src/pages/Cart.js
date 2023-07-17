@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout/Layout";
 import { useCart } from "../Context/CartContext";
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import DropIn from "braintree-web-drop-in-react";
+import axios from "axios";
 
 const Cart = () => {
+  const [clientToken, setClientToken] = useState("");
+  const [instanse, setInstanse] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const [auth, setAuth] = useAuth();
   const [cart, setCart] = useCart();
+
   const navigate = useNavigate();
 
   //   total price
@@ -56,6 +63,22 @@ const Cart = () => {
       console.log(e);
     }
   };
+
+  //get payment gateway token
+  const getToken = async () => {
+    try {
+      const { data } = await axios.get("/api/v1/products/braintree/token");
+      setClientToken(data?.clientToken);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // handlePayment
+  const handlePayment = () => {};
+  useEffect(() => {
+    getToken();
+  }, [auth?.token]);
   return (
     <Layout title={"Cart -"}>
       <div className="container mt-3">
@@ -127,6 +150,21 @@ const Cart = () => {
             <h4>Total Price : {totalPrice()}</h4>
 
             <h4>With Vat Total Price : {totalVatPrice()}</h4>
+
+            <div className="mt-2">
+              <DropIn
+                options={{
+                  authorization: clientToken,
+                  paypal: {
+                    flow: "vault",
+                  },
+                }}
+                onInstance={(instance) => setInstanse(instance)}
+              />
+              <button className="btn btn-success" onClick={handlePayment}>
+                Make Payment
+              </button>
+            </div>
           </div>
         </div>
       </div>
