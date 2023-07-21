@@ -5,12 +5,12 @@ import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import DropIn from "braintree-web-drop-in-react";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
 const Cart = () => {
   const [clientToken, setClientToken] = useState("");
-  const [instanse, setInstanse] = useState("");
+  const [instance, setInstance] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [auth, setAuth] = useAuth();
   const [cart, setCart] = useCart();
 
@@ -75,7 +75,25 @@ const Cart = () => {
   };
 
   // handlePayment
-  const handlePayment = () => {};
+  const handlePayment = async () => {
+    try {
+      setLoading(true);
+      const { nonce } = await instance.requestPaymentMethod();
+      const { data } = await axios.post("/api/v1/products/braintree/payment", {
+        nonce,
+        cart,
+      });
+      setLoading(false);
+      localStorage.removeItem("cart");
+      setCart([]);
+      navigate("/dashboard/user/orders");
+      toast.success("Payment Completed Successfully ");
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     getToken();
   }, [auth?.token]);
@@ -101,7 +119,7 @@ const Cart = () => {
           <div className="col-md-7">
             <div className="row">
               {cart?.map((p) => (
-                <div className="row mb-2 p-3 card flex-row">
+                <div className="row mb-2 p-3 card flex-row" key={p._id}>
                   <div className="col-md-4">
                     <img
                       height={"140px"}
@@ -151,19 +169,64 @@ const Cart = () => {
 
             <h4>With Vat Total Price : {totalVatPrice()}</h4>
 
+            {auth?.user?.address ? (
+              <>
+                <div className="mb-3">
+                  <h4>Current Address</h4>
+                  <h5>{auth?.user?.address}</h5>
+                  <button
+                    className="btn btn-outline-warning"
+                    onClick={() => navigate("/dashboard/user/profile")}
+                  >
+                    Update Address
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="mb-3">
+                {auth?.token ? (
+                  <button
+                    className="btn btn-outline-warning"
+                    onClick={() => navigate("/dashboard/user/profile")}
+                  >
+                    Update Address
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-outline-warning"
+                    onClick={() =>
+                      navigate("/login", {
+                        state: "/cart",
+                      })
+                    }
+                  >
+                    Plase Login to checkout
+                  </button>
+                )}
+              </div>
+            )}
+
             <div className="mt-2">
-              <DropIn
-                options={{
-                  authorization: clientToken,
-                  paypal: {
-                    flow: "vault",
-                  },
-                }}
-                onInstance={(instance) => setInstanse(instance)}
-              />
-              <button className="btn btn-success" onClick={handlePayment}>
-                Make Payment
-              </button>
+              {!clientToken || !auth?.token || !cart?.length ? (
+                ""
+              ) : (
+                <>
+                  <DropIn
+                    options={{
+                      authorization: clientToken,
+                    }}
+                    onInstance={(instance) => setInstance(instance)}
+                  />
+
+                  <button
+                    className="btn btn-primary mb-3"
+                    onClick={handlePayment}
+                    disabled={loading || !instance || !auth?.user?.address}
+                  >
+                    {loading ? "Processing ...." : "Make Payment"}
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Checkbox, Radio } from "antd";
 import { prices } from "../components/Prices/Prices";
 import { useCart } from "../Context/CartContext";
+import "./Style/Homepage.css";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -126,10 +127,16 @@ const HomePage = () => {
 
   return (
     <Layout title={"Home - "}>
-      <div className="row mt-3">
-        <div className="col-md-3">
+      <img
+        src="/Images/banner.png"
+        className="banner-img"
+        alt="bannerimage"
+        width={"100%"}
+      />
+      <div className="container-fluid row mt-3 home-page">
+        <div className="col-md-3 filters">
           <h4 className="text-center">Filter By Category </h4>
-          <div className="d-flex flex-wrap">
+          <div className="d-flex flex-column">
             {categories?.map((c) => (
               <Checkbox
                 key={c._id}
@@ -150,9 +157,9 @@ const HomePage = () => {
               ))}
             </Radio.Group>
           </div>
-          <div className="d-flex flex-wrap">
+          <div className="d-flex flex-column">
             <button
-              className="btn btn-xs btn-warning mt-4 "
+              className="btn btn-xs btn-danger mt-4 "
               onClick={() => window.location.reload()}
             >
               Reset Filters
@@ -177,7 +184,7 @@ const HomePage = () => {
               <option value={32}>32</option>
             </select>
           </div>
-          <div className="d-flex flex-wrap">
+          {/* <div className="d-flex flex-wrap">
             {products?.map((p) => (
               <div
                 className="card m-3"
@@ -191,10 +198,14 @@ const HomePage = () => {
                   alt={p.name}
                 />
                 <div className="card-body">
+                  <div className="card-name-price"></div>
                   <h6 className="card-title" style={{ fontSize: ".8rem" }}>
                     {`${p.name.substring(0, 70)}...`}
                   </h6>
-                  <p className="card-text" style={{ fontSize: "0.7rem" }}>
+                  <p
+                    className="card-text card-price"
+                    style={{ fontSize: "0.7rem" }}
+                  >
                     {`${p.description.substring(0, 140)}.....`}
                   </p>
                   <p className="card-text" style={{ fontSize: "0.7rem" }}>
@@ -224,11 +235,58 @@ const HomePage = () => {
                 </div>
               </div>
             ))}
+          </div> */}
+          <div className="d-flex flex-wrap">
+            {products?.map((p) => (
+              <div className="card m-2" key={p._id}>
+                <img
+                  src={`/api/v1/products/product-photo/${p._id}`}
+                  className="card-img-top"
+                  alt={p.name}
+                />
+                <div className="card-body d-flex flex-column">
+                  <div className="card-name-price">
+                    <p className="card-title">{p.name.substring(0, 20)}</p>
+                    <h5 className="card-title card-price">
+                      {p.price.toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      })}
+                    </h5>
+                  </div>
+                  <p className="card-text ">
+                    {p.description.substring(0, 50)}...
+                  </p>
+                  <div className="card-name-price">
+                    <button
+                      className="btn btn-info ms-1 "
+                      onClick={() => navigate(`/products/${p.slug}`)}
+                    >
+                      More Details
+                    </button>
+                    <button
+                      className="btn btn-dark ms-1 "
+                      onClick={() => {
+                        setCart([...cart, p]);
+                        localStorage.setItem(
+                          "cart",
+                          JSON.stringify([...cart, p])
+                        );
+                        toast.success("Item Added to cart");
+                      }}
+                    >
+                      ADD TO CART
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
+
           <div className="m-2 p-3 ">
             {products && products.length < total && (
               <button
-                className="btn btn-xs btn-info"
+                className="btn btn-xs loadmore"
                 onClick={(e) => {
                   e.preventDefault();
                   setPage(page + 1);
