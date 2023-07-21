@@ -8,8 +8,6 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoute.js";
 import cors from "cors";
 import path from "path";
-import myshop1 from "./myshopclient/build";
-import myshop2 from "./myshopclient/build/index.html";
 
 // configure enc pakage
 dotenv.config();
