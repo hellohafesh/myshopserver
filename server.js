@@ -9,6 +9,8 @@ import productRoutes from "./routes/productRoute.js";
 import cors from "cors";
 import path from "path";
 import {fileURLToPath} from "url";
+import myshop1 from "./myshopclient/build";
+import myshop2 from "./myshopclient/build/index.html";
 
 // configure enc pakage
 dotenv.config();
@@ -23,7 +25,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
-app.use(express.static(path.join(__dirname, "./myshopclient/build")));
+app.use(express.static(path.join(__dirname, `${myshop1}`)));
 
 // Routes
 app.use("/api/v1/auth", authRoutes);
@@ -32,7 +34,7 @@ app.use("/api/v1/products", productRoutes);
 
 // rest API
 app.use("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "./myshopclient/build/index.html"));
+  res.sendFile(path.join(__dirname, `${myshop2}));
 });
 
 // app.get("/", (req, res) => {
